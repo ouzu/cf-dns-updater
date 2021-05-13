@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"flag"
 	"fmt"
@@ -8,6 +9,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"regexp"
 	"strings"
 	"time"
@@ -45,12 +47,21 @@ func main() {
 	}
 
 	if *cfKey == "" {
-		file, err := ioutil.ReadFile(*cfKeyPath)
+		file, err := os.Open(*cfKeyPath)
 		if err != nil {
 			log.Fatalln(err)
 		}
 
-		*cfKey = string(file)
+		reader := bufio.NewReader(file)
+
+		line, _, err := reader.ReadLine()
+		file.Close()
+
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		*cfKey = string(line)
 	}
 
 	cfClient, err := cloudflare.New(*cfKey, *cfMail)
