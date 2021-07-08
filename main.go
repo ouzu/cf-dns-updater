@@ -14,6 +14,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bobesa/go-domain-util/domainutil"
 	"github.com/cloudflare/cloudflare-go"
 )
 
@@ -118,7 +119,7 @@ func main() {
 		}
 
 		log.Println("Updating", domain)
-		id, err := cfClient.ZoneIDByName(domain)
+		id, err := cfClient.ZoneIDByName(domainutil.Domain(domain))
 		if err != nil {
 			log.Fatalln(err)
 		}
